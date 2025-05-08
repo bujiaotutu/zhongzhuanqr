@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>小程序跳转中间页</title>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- 引入 jQuery -->
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .tip {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .btn-content {
+            position: relative;
+            display: inline-block;
+            width: 200px;
+            height: 50px;
+        }
+
+        .btn-content::before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            content: '打开小程序';
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            background-color: #07c160;
+            color: white;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>正在为您准备跳转...</h2>
+    <div class="tip">请在微信内打开，点击下方按钮跳转</div>
+    <!-- 按钮容器 -->
+    <div id="launch-container" style="margin-top: 40px">
+        <!-- 静态插入的组件 -->
+        <wx-open-launch-weapp id="launch-btn" username="gh_6e69841e8e30" path="/pages/cusCol/cusCol?cusColId=130"
+            style="display:none;width:200px;height:50px;">
+            <template class="btn-content">
+                <button
+                    style="display: inline-block; width:200px; height:50px; background-color: #07c160; color: white; border-radius: 6px; font-size: 16px; border: none;">
+                    打开小程序
+                </button>
+            </template>
+        </wx-open-launch-weapp>
+    </div>
+
+    <script>
+        // 跳转映射表（key 为 ?type=xxx 中的 type）
+        const ghIdTqm = "gh_6e69841e8e30"; // 淘气猫小程序的原始ID（不是 appId）
+        const jumpMap = {
+            BlackHole: {
+                username: ghIdTqm, // 小程序原始ID（不是 appId）
+                path: "/pages/cusCol/cusCol?cusColId=130", // 黑洞的攻略
+            },
+            LightningBall: {
+                username: ghIdTqm,
+                path: "/pages/cusCol/cusCol?cusColId=133", // 闪电球的攻略
+            },
+            default: {
+                username: ghIdTqm,
+                path: "/pages/index/index", // 默认路径
+            }
+        };
+
+        // 获取 URL 参数
+        function getQueryParam(name) {
+            const match = window.location.search.match(
+                new RegExp("[?&]" + name + "=([^&]*)")
+            );
+            return match ? decodeURIComponent(match[1]) : null;
+        }
+
+        // 渲染跳转按钮
+        function renderLaunchButton({ username, path }) {
+            const container = document.getElementById("launch-container");
+
+            // 使用 jQuery 动态控制显隐，并修改 username 和 path
+            $("#launch-btn")
+                .css("display", "inline-block")  // 显示按钮
+                .attr("username", username)      // 修改 username
+                .attr("path", path);             // 修改 path
+
+            console.log("按钮显示并更新");
+        }
+
+        // 主逻辑
+        const type = getQueryParam("type");
+        const target = jumpMap[type] || jumpMap.default;
+        renderLaunchButton(target);
+    </script>
+</body>
+
+</html>
