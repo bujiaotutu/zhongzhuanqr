@@ -99,6 +99,18 @@
 
             alert('username:' + username + '\npath' + path);
         }
+        // 环境监听
+        document.querySelector('#launch-btn').addEventListener('launch', function (e) {
+            alert('launch success'); // 小程序跳转成功
+        });
+        document.querySelector('#launch-btn').addEventListener('error', function (e) {
+            alert('launch error: ' + JSON.stringify(e.detail));
+        });
+        document.addEventListener("WeixinJSBridgeReady", function () {
+            alert("WeixinJSBridgeReady"); // 微信环境准备好
+        });
+
+
 
         // 主逻辑
         const type = getQueryParam("type");
